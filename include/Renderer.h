@@ -1,6 +1,5 @@
 #pragma once
-#include "SDL2/SDL.h"
-#include "utils.h"
+#include "Cell.h"
 
 class Renderer
 {
@@ -20,4 +19,6 @@ public:
     void plot(float(*func)(float));
     void joinPoints(std::vector<Point*>& points);
     void join(Point& p1, Point& p2);
+    void drawCell(std::vector<Cell> &cells);
+    void drawRect(SDL_Rect* rect);
 };

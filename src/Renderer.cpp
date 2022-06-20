@@ -64,3 +64,21 @@ void Renderer::join(Point& p1, Point& p2)
 {
 	SDL_RenderDrawLine(renderer, p1.x + size.W/2, size.H/2 - p1.y, p2.x + size.W/2, size.H/2 - p2.y);
 }
+
+void Renderer::drawCell(std::vector<Cell> &cells)
+{
+	for(auto it = std::begin(cells); it != std::end(cells); ++it) 
+	{
+		if(it->active == true)
+			setColour(255,255,255);
+		else
+			setColour(0,0,0);
+		drawRect(it->rect);
+		std::cout << it->row << " " << it->col << std::endl;
+	}
+}
+
+void Renderer::drawRect(SDL_Rect* rect)
+{
+	SDL_RenderFillRect(renderer, rect);
+}

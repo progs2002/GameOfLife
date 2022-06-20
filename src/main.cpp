@@ -12,6 +12,37 @@ bool isRunning = false;
 
 RES size;
 
+std::vector<Cell> cells;
+
+SDL_Rect *rect;
+
+
+
+int init()
+{
+    SDL_Init(SDL_INIT_EVERYTHING);
+	size = getRES();
+	pen = new Renderer("Game Of Life", size);
+
+    //initialize variables 
+
+	//populate cells array
+
+	for(int i = 0; i < rows; i++)
+	{
+		for(int j = 0; j < cols; j++)
+		{
+			cells.emplace_back(i, j, new SDL_Rect{j, i, cell_size, cell_size});
+		}
+	}
+
+	// for(int i = 100; i < 200; i++)
+	// 	cells[i].changeState();
+
+    isRunning = true;
+	return 0;
+}
+
 void update()
 {
     //handle events
@@ -35,21 +66,12 @@ void update()
 void render()
 {
     //display simpleWindow
-	pen->setColour(0, 255, 255);
+	pen->setColour(0, 0, 0);
 	pen->drawBackGround();
-    pen->present();
-}
-
-int init()
-{
-    SDL_Init(SDL_INIT_EVERYTHING);
-	size = getRES();
-	pen = new Renderer("Window name", size);
-
-    //initialize variables 
-
-    isRunning = true;
-	return 0;
+	
+	pen->drawCell(cells);
+    
+	pen->present();
 }
 
 int main(int argc, char* args[])
@@ -63,6 +85,9 @@ int main(int argc, char* args[])
 		deltaTime = (double)((currentTick - lastTick) * 1000 / (double)SDL_GetPerformanceFrequency()); // in milliseconds
 		update();
 		render();
+		
+		//debuggggg
+		break;
 	}
 
 	delete pen;
