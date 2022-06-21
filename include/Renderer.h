@@ -12,13 +12,9 @@ public:
     Renderer(const char* title, RES size);
     ~Renderer();
     int drawBackGround();
-	void setColour(int R, int G, int B);
+	void setColour(uint8_t R, uint8_t G, uint8_t B);
 	void setRandomColour();
 	void present();
-    void showAxis();
-    void plot(float(*func)(float));
-    void joinPoints(std::vector<Point*>& points);
-    void join(Point& p1, Point& p2);
     void drawCell(std::vector<Cell> &cells);
     void drawRect(SDL_Rect* rect);
 };

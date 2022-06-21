@@ -23,7 +23,7 @@ int Renderer::drawBackGround()
 	return 1;
 }
 
-void Renderer::setColour(int R, int G, int B)
+void Renderer::setColour(uint8_t R, uint8_t G, uint8_t B)
 {
 	SDL_SetRenderDrawColor(renderer, R, G, B, SDL_ALPHA_OPAQUE);
 }
@@ -33,48 +33,15 @@ void Renderer::present()
 	SDL_RenderPresent(renderer);
 }
 
-void Renderer::showAxis()
-{
-	SDL_RenderDrawLine(renderer, 0, size.H / 2, size.W, size.H / 2);
-	SDL_RenderDrawLine(renderer, size.W / 2, 0, size.W / 2, size.H);
-}
-
-void Renderer::plot(float(*func)(float))
-{
-
-	float dx = 1;
-
-	for(float i = -size.W/2; i <= size.W/2; i+=dx)
-	{
-		//SDL_RenderDrawPoint(renderer, i + 400, 400 - func(i));
-		SDL_RenderDrawLine(renderer, i + size.W/2, size.H/2 - func(i), i + dx + size.W/2, size.H/2 - func(i + dx));
-	}
-}
-
-void Renderer::joinPoints(std::vector<Point*>& points)
-{
-	if(points.size() > 1)
-	{
-		for(int i = 0; i < points.size() - 1; i++)
-			SDL_RenderDrawLine(renderer, points.at(i)->x + size.W/2, size.H/2 - points.at(i)->y,points.at(i+1)->x + size.W/2, size.H/2 - points.at(i+1)->y);
-	}
-}
-
-void Renderer::join(Point& p1, Point& p2)
-{
-	SDL_RenderDrawLine(renderer, p1.x + size.W/2, size.H/2 - p1.y, p2.x + size.W/2, size.H/2 - p2.y);
-}
-
 void Renderer::drawCell(std::vector<Cell> &cells)
 {
-	for(auto it = std::begin(cells); it != std::end(cells); ++it) 
+	for(auto cell : cells)
 	{
-		if(it->active == true)
+		if(cell.active)
 			setColour(255,255,255);
 		else
 			setColour(0,0,0);
-		drawRect(it->rect);
-		std::cout << it->row << " " << it->col << std::endl;
+		drawRect(cell.rect);
 	}
 }
 

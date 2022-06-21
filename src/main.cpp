@@ -12,6 +12,10 @@ bool isRunning = false;
 
 RES size;
 
+uint8_t cell_size;
+uint16_t rows;
+uint16_t cols;
+
 std::vector<Cell> cells;
 
 SDL_Rect *rect;
@@ -25,21 +29,24 @@ int init()
 	pen = new Renderer("Game Of Life", size);
 
     //initialize variables 
+	cell_size = 40;
+	rows = size.H / cell_size;
+	cols = size.W / cell_size;
 
 	//populate cells array
-
+	cells.reserve(rows * cols);
 	for(int i = 0; i < rows; i++)
 	{
 		for(int j = 0; j < cols; j++)
 		{
-			cells.emplace_back(i, j, new SDL_Rect{j, i, cell_size, cell_size});
+			cells.emplace_back(i, j, new SDL_Rect{j*cell_size, i*cell_size, cell_size, cell_size});
 		}
 	}
 
-	// for(int i = 100; i < 200; i++)
-	// 	cells[i].changeState();
+	//check DEBUG: 
+	// for(int i = 0; i < cells.size()/2; i++)	cells[i].changeState();
 
-    isRunning = true;
+	isRunning = true;
 	return 0;
 }
 
@@ -49,16 +56,21 @@ void update()
 
     while (SDL_PollEvent(&event))
 	{
-		if (event.type == SDL_QUIT)
+		switch(event.type)
 		{
-			isRunning = false;
-			break;
-		}
-
-        //handle single thread inputs
-		if (event.type == SDL_KEYDOWN)
-		{
-			
+			case SDL_QUIT:
+				isRunning = false;
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				if(event.button.button == SDL_BUTTON_LEFT)
+				{
+					float x_m = event.button.x;
+					float y_m = event.button.y;
+					cells[(int)(x_m / cell_size) + rows * (int)(y_m / cell_size)].changeState();
+					std::cout << "x:" << x_m << " y:" << y_m << std::endl;
+					std::cout << "r:" << (int)x_m/cell_size << " c:" << (int)y_m/cell_size << std::endl;
+				}
+				break;
 		}
 	}
 }
@@ -74,6 +86,12 @@ void render()
 	pen->present();
 }
 
+void cleanUp()
+{
+	delete pen;
+	cells.clear();
+}
+
 int main(int argc, char* args[])
 {
 	init();
@@ -83,14 +101,12 @@ int main(int argc, char* args[])
 		lastTick = currentTick;
 		currentTick = SDL_GetPerformanceCounter();
 		deltaTime = (double)((currentTick - lastTick) * 1000 / (double)SDL_GetPerformanceFrequency()); // in milliseconds
+		//std::cout << "Time taken to render in ms = " << deltaTime << std::endl;
 		update();
 		render();
-		
-		//debuggggg
-		break;
 	}
 
-	delete pen;
+	cleanUp();
 
 	return 0;
 }

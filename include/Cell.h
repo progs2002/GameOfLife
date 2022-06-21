@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
-#include "constants.h"
+#include "utils.h"
 
 class Cell
 {
