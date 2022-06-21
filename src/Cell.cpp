@@ -14,8 +14,8 @@ Cell::Cell()
     this->rect = nullptr;
 }
 
-
 void Cell::changeState()
 {
     this->active = !active;
 }
+
