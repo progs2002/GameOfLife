@@ -17,6 +17,8 @@ uint8_t cell_size;
 uint16_t rows;
 uint16_t cols;
 
+uint16_t cells_active = 0;
+
 std::vector<Cell> cells;
 
 SDL_Rect *rect;
@@ -28,6 +30,17 @@ struct Pos
 	int x, y;
 };
 
+Pos p[8] = {
+				{-1,-1},
+				{0,-1},
+				{1,-1},
+				{-1,0},
+				{1,0},
+				{-1,1},
+				{0,1},
+				{1,1}
+
+			};
 
 int init()
 {
@@ -85,16 +98,13 @@ void update()
 
 	//logic
 
-	if(!flips.empty())
-	{
-		for(uint32_t index: flips)
-			cells[index].active = !cells[index].active;
-	}
-
 	if(!simStart)
 		return;
 
-	std::cout << "SIM RUNNING " << std::endl;
+	
+
+	cells_active = 0;
+
 	for(int i = 0; i < rows; i++)
 	{
 		for(int j = 0; j < cols; j++)
@@ -110,29 +120,38 @@ void update()
 			*/
 
 			int active_neighbours = 0;
-			
-			Pos p[8] = {
-				{0,-1},
-				{-1,0},
-				{0,1},
-				{1,0},
-				{-1,-1},
-				{1,-1},
-				{-1,1},
-				{1,1}
-				};
+			int index = rows * y + x;
 			
 			for(int k = 0; k < 8; k++)
 			{
-				if(x + p[i].x != 0 && x + p[i].x != cols && y + p[i].y != 0 && y + p[i].y != rows)
-					active_neighbours += cells[(y + p[i].y)*rows + (x + p[i].x)].active;
+				if(x + p[k].x >= 0 && x + p[k].x < cols && y + p[k].y >= 0 && y + p[k].y < rows)
+					active_neighbours += cells[(y + p[k].y)*rows + (x + p[k].x)].active;
 			}
 
-			//TODO: Now that we have number of active neighbours its time to calculate the behaviour of our cell. and add it to out flips vector
+			//TODO: Now that we have number of active neighbours its time to calculate the behaviour of our cell. and add it to out flips vector     
+
+			if(cells[x + rows*y].active)
+			{
+				cells_active ++;
+
+				if(active_neighbours < 2 || active_neighbours > 3)
+					flips.push_back(index);
+			}
+			else if(active_neighbours == 3)
+				flips.push_back(index);
+
 		}
 	}
 
-	flips.clear();
+	if(!flips.empty())
+	{
+		for(uint32_t index: flips)
+			cells[index].active = !cells[index].active;
+		
+		flips.clear();
+	}
+
+	std::cout << "time to render : "<< deltaTime << "ms cells active : " << cells_active << "\n";
 }
 
 void render()
@@ -165,6 +184,7 @@ int main(int argc, char* args[])
 		//std::cout << "Time taken to render in ms = " << deltaTime << std::endl;
 		update();
 		render();
+		SDL_Delay(100);
 	}
 
 	cleanUp();
