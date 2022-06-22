@@ -13,7 +13,7 @@ bool simStart = false;
 
 RES size;
 
-uint8_t cell_size;
+const uint8_t cell_size = 10;
 uint16_t rows;
 uint16_t cols;
 
@@ -42,6 +42,18 @@ Pos p[8] = {
 
 			};
 
+void reset()
+{
+	for(auto& cell : cells)
+		cell.active = false;
+}
+
+void invert()
+{
+	for(auto& cell : cells)
+		cell.active = !cell.active;
+}
+
 int init()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -49,7 +61,6 @@ int init()
 	pen = new Renderer("Game Of Life", size);
 
     //initialize variables 
-	cell_size = 10;
 	rows = size.H / cell_size;
 	cols = size.W / cell_size;
 
@@ -92,6 +103,10 @@ void update()
 			case SDL_KEYDOWN:
 				if(event.key.keysym.sym == SDLK_SPACE)
 					simStart = !simStart;
+				else if(event.key.keysym.sym == SDLK_r)
+					reset();
+				else if(event.key.keysym.sym == SDLK_s)
+					invert();	
 				break;
 		}
 	}
