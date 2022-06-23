@@ -58,7 +58,7 @@ void invert()
 int init()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
-	size = getRES();
+	size = {800, 800};
 	pen = new Renderer("Game Of Life", size);
 
     //initialize variables 
