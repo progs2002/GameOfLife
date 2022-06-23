@@ -15,4 +15,4 @@ very minimalist build system
 
 run gnu `make` for building and launching the debug build 
 
-and `make release` for realease build. 
+and `runWindows.bat` to run on windows. (make sure you have `gcc`)
