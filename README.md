@@ -1,8 +1,10 @@
 # GameOfLife
 Real time interactive simulation of Conway's Game of Life made with c++/sdl2. 
 <br>
+
 <img src = "Screenshot.png">
 <br>
+
 <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">What is Conway's Game of Life?</a>
 
 
