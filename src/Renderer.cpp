@@ -28,9 +28,28 @@ void Renderer::setColour(uint8_t R, uint8_t G, uint8_t B)
 	SDL_SetRenderDrawColor(renderer, R, G, B, SDL_ALPHA_OPAQUE);
 }
 
+void Renderer::setColour(uint8_t R, uint8_t G, uint8_t B, uint8_t A)
+{
+	SDL_SetRenderDrawColor(renderer, R, G, B, A);
+
+}
+
+
 void Renderer::present()
 {
 	SDL_RenderPresent(renderer);
+}
+
+void Renderer::drawGrid()
+{
+	for (int i = cell_size; i < size.H; i+=cell_size)
+	{
+		SDL_RenderDrawLine(renderer, 0, i, size.W, i);
+	}
+	for (int i = cell_size; i < size.W; i+=cell_size)
+	{
+		SDL_RenderDrawLine(renderer, i, 0, i, size.H);
+	}
 }
 
 void Renderer::drawCell(std::vector<Cell> &cells)
@@ -38,9 +57,9 @@ void Renderer::drawCell(std::vector<Cell> &cells)
 	for(auto cell : cells)
 	{
 		if(cell.active)
-			setColour(255,255,255);
-		else
 			setColour(0,0,0);
+		else
+			setColour(255,255,255);
 		drawRect(cell.rect);
 	}
 }

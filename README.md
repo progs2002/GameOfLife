@@ -7,7 +7,7 @@ Real time interactive simulation of Conway's Game of Life made with c++/sdl2.
 
 
 press `space` to pause and play anytime and use `left-mouse button` to mark/unmark cells.
-use `r` for reset and `s` for inverting cell marks.
+use `r` for reset, `s` for inverting cell marks and `g` to switch grid view.
 
 ## How to run
 

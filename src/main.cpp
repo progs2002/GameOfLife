@@ -10,10 +10,11 @@ SDL_Event event;
 
 bool isRunning = false;
 bool simStart = false;
+bool show_grid = true;
 
 RES size;
 
-const uint8_t cell_size = 10;
+extern const uint8_t cell_size = 20;
 uint16_t rows;
 uint16_t cols;
 
@@ -77,6 +78,8 @@ int init()
 	//check DEBUG: 
 	// for(int i = 0; i < cells.size()/2; i++)	cells[i].changeState();
 
+	std::cout << "Simulation started use mouse to mark cells and SPACE to start\n";
+
 	isRunning = true;
 	return 0;
 }
@@ -102,11 +105,16 @@ void update()
 				break;
 			case SDL_KEYDOWN:
 				if(event.key.keysym.sym == SDLK_SPACE)
+				{	
 					simStart = !simStart;
+					std::cout << "Simulation paused. use mouse to mark/unmark cells\n";
+				}
 				else if(event.key.keysym.sym == SDLK_r)
 					reset();
 				else if(event.key.keysym.sym == SDLK_s)
 					invert();	
+				else if(event.key.keysym.sym == SDLK_g)
+					show_grid = !show_grid;	
 				break;
 		}
 	}
@@ -127,7 +135,7 @@ void update()
 			int x = j, y = i;
 
 			/*
-			RULES
+			RULES 
 			if cell is active and active_neighbours < 2, cell = inactive
 			if cell is active and active_neighbours = {2, 3}, cell = active
 			if cell is active and active_neighbours > 3, cell = inactive
@@ -172,11 +180,16 @@ void update()
 void render()
 {
     //display simpleWindow
-	pen->setColour(0, 0, 0);
+	pen->setColour(255, 255, 255);
 
 	pen->drawBackGround();
 	
 	pen->drawCell(cells);
+
+	pen->setColour(185,185,185, 0);
+
+	if(show_grid)
+		pen->drawGrid();
     
 	pen->present();
 }
